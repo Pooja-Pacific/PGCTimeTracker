@@ -17,8 +17,10 @@ public class LoginViewModel : ReactiveObject
     private bool _showError;
     private string _errorMessage = string.Empty;
     private bool _canLogin;
+    private char _passwordChar = '●';
+    private bool _isPasswordVisible = false;
 
-    public string Username
+    public string Username  
     {
         get => _username;
         set
@@ -55,12 +57,25 @@ public class LoginViewModel : ReactiveObject
         get => _canLogin;
         set => this.RaiseAndSetIfChanged(ref _canLogin, value);
     }
+    public char PasswordChar
+    {
+        get => _passwordChar;
+        set => this.RaiseAndSetIfChanged(ref _passwordChar, value);
+    }
 
     public ICommand LoginCommand { get; }
-
+    public ICommand TogglePasswordVisibilityCommand { get; }
     public LoginViewModel()
     {
         LoginCommand = new RelayCommand(async () => await PerformLoginAsync());
+
+        TogglePasswordVisibilityCommand = new RelayCommand(() =>
+        {
+            _isPasswordVisible = !_isPasswordVisible;
+            PasswordChar = _isPasswordVisible ? '\0' : '●';
+            return Task.CompletedTask;
+        });
+
     }
 
     private void UpdateCanLogin()
@@ -99,7 +114,7 @@ public class LoginViewModel : ReactiveObject
                 null,
                 UrlConstants.GetUserDetail,
                 RequestType.GET,
-                CommonExtension.GetUserToken());
+                CommonExtension.TokenKey??string.Empty);
 
             if (userDetails?.ResponseStatus != ResponseStatuses.Success)
             {

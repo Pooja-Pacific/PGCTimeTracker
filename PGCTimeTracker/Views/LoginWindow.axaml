@@ -1,10 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:PGCTimeTracker.ViewModels"
-        x:Class="PGCTimeTracker.Views.LoginWindow"
-        Width="400" Height="300"
-        Title="Login">
-
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:vm="clr-namespace:PGCTimeTracker.ViewModels"
+x:Class="PGCTimeTracker.Views.LoginWindow"
+Width="400" Height="300"
+Title="Login">
 	<Window.DataContext>
 		<vm:LoginViewModel />
 	</Window.DataContext>
@@ -13,19 +12,21 @@
 		<TextBlock Text="Username" />
 		<TextBox Text="{Binding Username}" />
 
-		<TextBlock Text="Password" Margin="0,10,0,0" />
-		<TextBox Text="{Binding Password}" PasswordChar="●" />
+		<StackPanel Orientation="Horizontal">
+			<TextBox Text="{Binding Password}" PasswordChar="{Binding PasswordChar}" Width="200" />
+			<Button Content="👁" Command="{Binding TogglePasswordVisibilityCommand}" />
+		</StackPanel>
 
 		<Button Content="Login"
-                Command="{Binding LoginCommand}"
-                IsEnabled="{Binding CanLogin}"
-                Margin="0,20,0,0"
-                HorizontalAlignment="Center"
-                Width="100" />
+				Command="{Binding LoginCommand}"
+				IsEnabled="{Binding CanLogin}"
+				Margin="0,20,0,0"
+				HorizontalAlignment="Center"
+				Width="100" />
 
 		<TextBlock Text="{Binding ErrorMessage}"
-                   Foreground="Red"
-                   Margin="0,10,0,0"
-                   IsVisible="{Binding ShowError}" />
+				   Foreground="Red"
+				   Margin="0,10,0,0"
+				   IsVisible="{Binding ShowError}" />
 	</StackPanel>
 </Window>

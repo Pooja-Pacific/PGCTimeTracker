@@ -7,6 +7,20 @@ using System.Threading.Tasks;
 
 namespace PGCTimeTracker.Models
 {
+    public class TokenApiResponse
+    {
+        [JsonProperty("ResponseStatus")]
+        public string ResponseStatus { get; set; }
+
+        [JsonProperty("Message")]
+        public string Message { get; set; }
+
+        [JsonProperty("ResponseData")]
+        public TokenResponseData ResponseData { get; set; }
+
+        [JsonProperty("ErrorData")]
+        public object ErrorData { get; set; }
+    }
     public partial class TokenResponseData
     {
         [JsonProperty("TwoFactorEnabled")]
@@ -17,13 +31,13 @@ namespace PGCTimeTracker.Models
     }
     public class TokenResponseVM
     {
-        [JsonProperty("accessToken")]
-        public string AccessToken { get; set; } = string.Empty;
+        [JsonProperty("Username")]
+        public string Username { get; set; }
 
-        [JsonProperty("refreshToken")]
-        public string RefreshToken { get; set; } = string.Empty;
+        [JsonProperty("Token")]
+        public string AccessToken { get; set; }
 
-        [JsonProperty("expiresIn")]
-        public int ExpiresIn { get; set; }
+        [JsonProperty("TokenExpiry")]
+        public DateTime TokenExpiry { get; set; }
     }
 }

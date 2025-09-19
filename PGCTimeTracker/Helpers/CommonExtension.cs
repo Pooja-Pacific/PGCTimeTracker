@@ -3,10 +3,10 @@ using PGCTimeTracker.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;  
+using System.Threading.Tasks;
 
 namespace PGCTimeTracker.Helpers
 {
@@ -25,10 +25,13 @@ namespace PGCTimeTracker.Helpers
             {
                 var request = new HttpRequestMessage(requestType == RequestType.POST ? HttpMethod.Post : HttpMethod.Get, requestURL);
                 if (!string.IsNullOrEmpty(authorizationToken))
-                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authorizationToken);
+                {
+                    var cleanToken = authorizationToken.Replace("bearer ", "", StringComparison.OrdinalIgnoreCase).Trim('"', '{', '}', ' ');
+                    request.Headers.Authorization = new AuthenticationHeaderValue("bearer", cleanToken);                    
+                }
 
                 if (headers != null)
-                {
+                { 
                     foreach (var h in headers)
                         request.Headers.Add(h.Key, h.Value);
                 }
@@ -76,10 +79,10 @@ namespace PGCTimeTracker.Helpers
             {
                 try
                 {
-                    var tokenResponse = JsonConvert.DeserializeObject<TokenResponseData>(response.Body);
-                    if (tokenResponse?.Token != null)
+                    var tokenResponse = JsonConvert.DeserializeObject<TokenApiResponse>(response.Body);
+                    if (tokenResponse?.ResponseData?.Token != null)
                     {
-                        return tokenResponse.Token.AccessToken; // adjust property name based on your API
+                        return tokenResponse.ResponseData.Token.AccessToken;
                     }
                 }
                 catch (Exception ex)
@@ -89,7 +92,7 @@ namespace PGCTimeTracker.Helpers
             }
             return null;
         }
-        
+
         public static bool ValidateTokenTimeBased(string token)
 
         {
@@ -106,12 +109,5 @@ namespace PGCTimeTracker.Helpers
             }
         }
 
-        public static async Task<TResponse?> ExecuteAsync<TRequest, TResponse>(TRequest request,string url,RequestType requestType,string token = "")
-            where TResponse : class, new()
-        {
-            // TODO: Replace with actual HTTP call
-            await Task.Delay(300);
-            return new TResponse();
-        }
     }
 }
