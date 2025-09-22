@@ -19,4 +19,13 @@ namespace PGCTimeTracker.Models
         public string UserName { get; set; }
         public string Password { get; set; }
     }
+    public class UserLogoutVM
+    {
+        public DateTime? LogOutTime { get; set; }
+        public long UserId { get; set; }
+    }
+    public class LogoutTimeVM
+    {
+        public DateTime? LogOutTime { get; set; }
+    }
 }

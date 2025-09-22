@@ -2,11 +2,12 @@
 using Avalonia.Threading;
 using PGCTimeTracker.Helpers;
 using PGCTimeTracker.Models;
+using PGCTimeTracker.Services;
 using ReactiveUI;
 using System;
-using System.Reactive;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static PGCTimeTracker.Services.IdleDataManager;
 
 namespace PGCTimeTracker.ViewModels;
 
@@ -29,7 +30,6 @@ public class LoginViewModel : ReactiveObject
             UpdateCanLogin();
         }
     }
-
     public string Password
     {
         get => _password;
@@ -39,19 +39,11 @@ public class LoginViewModel : ReactiveObject
             UpdateCanLogin();
         }
     }
-
-    public bool ShowError
-    {
-        get => _showError;
-        set => this.RaiseAndSetIfChanged(ref _showError, value);
-    }
-
     public string ErrorMessage
     {
         get => _errorMessage;
         set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
     }
-
     public bool CanLogin
     {
         get => _canLogin;
@@ -62,7 +54,6 @@ public class LoginViewModel : ReactiveObject
         get => _passwordChar;
         set => this.RaiseAndSetIfChanged(ref _passwordChar, value);
     }
-
     public ICommand LoginCommand { get; }
     public ICommand TogglePasswordVisibilityCommand { get; }
     public LoginViewModel()
@@ -76,68 +67,104 @@ public class LoginViewModel : ReactiveObject
             return Task.CompletedTask;
         });
 
-    }
+        TryAutoLoginAsync();
+        var LogOutDetails = IdleDataManager.GetDataFromFile<UserLogoutVM>(DateTime.UtcNow.Date,FileType.ShutdownLog);
+        if (LogOutDetails.UserId != 0)
+        {
+            _ = IdleDataManager.SaveLogoutTime(new LogoutTimeVM { LogOutTime = LogOutDetails.LogOutTime });
+            //    Username = savedCreds.UserName ?? string.Empty;
+            //    Password = savedCreds.Password ?? string.Empty;
+                        
+            UpdateCanLogin();
 
+            // 🔹 Optional, auto-login if creds are found
+            if (CanLogin)
+            {
+                _ = PerformLoginAsync();
+            }
+        }
+    }
     private void UpdateCanLogin()
     {
         CanLogin = !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password);
     }
-
     private async Task PerformLoginAsync()
     {
         CanLogin = false;
-        ShowError = false;
         ErrorMessage = string.Empty;
 
         try
         {
-            string token;
-            try
+            if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
             {
-                token = await CommonExtension.GetUserTokenByApi(Username, Password);
-            }
-            catch
-            {
-                token = null;
-            }
-
-            if (string.IsNullOrEmpty(token))
-            {
-                ShowError = true;
-                ErrorMessage = "Login failed. Please check your credentials or network.";
+                await CommonExtension.ShowMessageAsync("Email address and password are required", "Incorrect Login Credentials");
                 return;
             }
 
-            CommonExtension.TokenKey = token;
+            await SetUserTokenWithCred(Username, Password);
 
-            var userDetails = await CommonExtension.ExcuteAsync<object, LoginResponseVM>(
-                null,
-                UrlConstants.GetUserDetail,
-                RequestType.GET,
-                CommonExtension.TokenKey??string.Empty);
+            await SetUserDetails();
 
-            if (userDetails?.ResponseStatus != ResponseStatuses.Success)
-            {
-                ShowError = true;
-                ErrorMessage = userDetails?.Message ?? "Failed to fetch user details.";
-                return;
-            }
+            //var logoutDetails = IdleDataManager.GetUserCredentials();
+            var logoutDetails = IdleDataManager.GetDataFromFile<UserLogoutVM>(DateTime.UtcNow.Date, FileType.ShutdownLog);
+            if (logoutDetails.UserId > 0)
+                _ = IdleDataManager.SaveLogoutTime(new LogoutTimeVM {LogOutTime=logoutDetails.LogOutTime});
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
                 if (App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                 {
-                    var idleForm = new IdleWindow(_username);
+                    var idleForm = new IdleWindow(Username);
                     idleForm.Show();
                     desktop.MainWindow?.Close();
                     desktop.MainWindow = idleForm;
                 }
             });
         }
+        catch (Exception ex)
+        {
+            IdleDataManager.ErrorToFile(ex, FileType.SystemLog);
+        }
         finally
         {
             CanLogin = true;
             UpdateCanLogin();
+        }
+    }
+    private async Task SetUserTokenWithCred(string username, string password)
+    {
+        try
+        {
+            var token = await CommonExtension.GetUserTokenByApi(username, password);
+            if (!string.IsNullOrEmpty(token))
+            {
+                var userCred = new UserCredentials
+                {
+                    UserName = username,
+                    Password = password
+                };
+                CommonExtension.TokenKey = token;
+                IdleDataManager.SaveDataToFile(userCred, IdleDataManager.FileType.Credentials);
+            }
+            IdleDataManager.ErrorToFile($"Login failed. Please check your credentials or network.", IdleDataManager.FileType.SystemLog);
+        }
+        catch (Exception ex)
+        {
+            IdleDataManager.ErrorToFile(ex, IdleDataManager.FileType.SystemLog);
+        }
+    }
+    private async Task SetUserDetails()=>IdleDataManager.configData=await CommonExtension.GetUserDetails();
+    private async void TryAutoLoginAsync()
+    {
+        var userCredentials = IdleDataManager.GetUserCredentials();
+        if (userCredentials != null &&
+            !string.IsNullOrWhiteSpace(userCredentials.UserName) &&
+            !string.IsNullOrWhiteSpace(userCredentials.Password))
+        {
+            Username = userCredentials.UserName;
+            Password = userCredentials.Password;
+
+            await PerformLoginAsync();
         }
     }
 
