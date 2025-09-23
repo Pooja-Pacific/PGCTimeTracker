@@ -3,6 +3,7 @@ using PGCTimeTracker.Helpers;
 using PGCTimeTracker.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -20,6 +21,9 @@ namespace PGCTimeTracker.Services
         private static string CredFileName => $"PMS_CRED";
         private static string ShutdownLogFileName => $"PMS_ShutDownLog_{configData.UserId}";
         private static string SystemLogFileName => $"PMS_LOG_{configData.UserId}";
+        // Add a flag to prevent recursive error logging
+        private static readonly object _errorLogLock = new object();
+        private static bool _isLoggingError = false;
         public enum FileType
         {
             Data,
@@ -108,16 +112,50 @@ namespace PGCTimeTracker.Services
         #region Error Logging
         public static bool ErrorToFile(object data, FileType type)
         {
-            try
+            lock (_errorLogLock)
             {
-                var path = GetDataFilePath(DateTime.UtcNow, type);
-                File.AppendAllText(path, $"{DateTime.UtcNow:HH:mm:ss} {data}{Environment.NewLine}");
-                return true;
-            }
-            catch(Exception ex)
-            {
-                ErrorToFile($"[Error Logging Failed] {ex.Message}",FileType.SystemLog);
-                return false;
+                // Prevent recursive error logging
+                if (_isLoggingError)
+                {
+                    // Write to debug output as a last resort
+                    Debug.WriteLine($"[Recursive Error Log Prevented] {data}");
+                    return false;
+                }
+
+                try
+                {
+                    _isLoggingError = true;
+
+                    var path = GetDataFilePath(DateTime.UtcNow, type);
+
+                    // Ensure directory exists
+                    var directory = Path.GetDirectoryName(path);
+                    if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    // Format the error message
+                    string errorMessage = data switch
+                    {
+                        Exception ex => $"{DateTime.UtcNow:HH:mm:ss} [ERROR] {ex.GetType().Name}: {ex.Message}\nStackTrace: {ex.StackTrace}",
+                        _ => $"{DateTime.UtcNow:HH:mm:ss} {data}"
+                    };
+
+                    File.AppendAllText(path, $"{errorMessage}{Environment.NewLine}");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    // As a last resort, write to console/debug output
+                    Debug.WriteLine($"[Error Logging Failed] {ex.Message}");
+                    Console.WriteLine($"[Error Logging Failed] {ex.Message}");
+                    return false;
+                }
+                finally
+                {
+                    _isLoggingError = false;
+                }
             }
         }
         #endregion

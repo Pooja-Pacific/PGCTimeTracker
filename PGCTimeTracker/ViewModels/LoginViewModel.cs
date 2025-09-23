@@ -59,28 +59,34 @@ public class LoginViewModel : ReactiveObject
     public LoginViewModel()
     {
         LoginCommand = new RelayCommand(async () => await PerformLoginAsync());
-
         TogglePasswordVisibilityCommand = new RelayCommand(() =>
         {
             _isPasswordVisible = !_isPasswordVisible;
             PasswordChar = _isPasswordVisible ? '\0' : '●';
             return Task.CompletedTask;
         });
+         TryAutoLoginAsync();
 
-        TryAutoLoginAsync();
-        var LogOutDetails = IdleDataManager.GetDataFromFile<UserLogoutVM>(DateTime.UtcNow.Date,FileType.ShutdownLog);
-        if (LogOutDetails.UserId != 0)
+        InitializeAsync();
+    }
+    private async void InitializeAsync()
+    {
+       
+        var logOutDetails = IdleDataManager.GetDataFromFile<UserLogoutVM>(
+            DateTime.UtcNow.Date, FileType.ShutdownLog);
+
+        if (logOutDetails.UserId != 0)
         {
-            _ = IdleDataManager.SaveLogoutTime(new LogoutTimeVM { LogOutTime = LogOutDetails.LogOutTime });
-            //    Username = savedCreds.UserName ?? string.Empty;
-            //    Password = savedCreds.Password ?? string.Empty;
-                        
+            await IdleDataManager.SaveLogoutTime(new LogoutTimeVM
+            {
+                LogOutTime = logOutDetails.LogOutTime
+            });
+
             UpdateCanLogin();
 
-            // 🔹 Optional, auto-login if creds are found
             if (CanLogin)
             {
-                _ = PerformLoginAsync();
+                await PerformLoginAsync();
             }
         }
     }
@@ -167,20 +173,34 @@ public class LoginViewModel : ReactiveObject
             await PerformLoginAsync();
         }
     }
-
     private class RelayCommand : ICommand
     {
-        private readonly Func<Task> _execute;
+        private readonly Func<Task>? _executeAsync;
+        private readonly Action? _executeSync;
+        private readonly Func<bool>? _canExecute;
 
-        public RelayCommand(Func<Task> execute)
+        public RelayCommand(Func<Task> executeAsync, Func<bool>? canExecute = null)
         {
-            _execute = execute;
+            _executeAsync = executeAsync;
+            _canExecute = canExecute;
         }
 
-        public event EventHandler CanExecuteChanged;
+        public RelayCommand(Action executeSync, Func<bool>? canExecute = null)
+        {
+            _executeSync = executeSync;
+            _canExecute = canExecute;
+        }
 
-        public bool CanExecute(object parameter) => true;
+        public event EventHandler? CanExecuteChanged;
+        public bool CanExecute(object? parameter) => _canExecute?.Invoke() ?? true;
 
-        public async void Execute(object parameter) => await _execute();
+        public async void Execute(object? parameter)
+        {
+            if (_executeAsync != null) await _executeAsync();
+            else _executeSync?.Invoke();
+        }
+
+        public void RaiseCanExecuteChanged() =>
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

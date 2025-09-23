@@ -1,32 +1,121 @@
 <Window xmlns="https://github.com/avaloniaui"
-xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-xmlns:vm="clr-namespace:PGCTimeTracker.ViewModels"
-x:Class="PGCTimeTracker.Views.LoginWindow"
-Width="400" Height="300"
-Title="Login">
-	<Window.DataContext>
-		<vm:LoginViewModel />
-	</Window.DataContext>
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PGCTimeTracker.Views.LoginWindow"
+        Title="LOGIN"
+        Width="800"
+        Height="450"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Background="White">	
 
-	<StackPanel Margin="20">
-		<TextBlock Text="Username" />
-		<TextBox Text="{Binding Username}" />
+	<Grid>
+		<!-- Background Image -->
+		<Image Source="avares://PGCTimeTracker/Assets/LOGIN-FORM.png" Stretch="Fill"/>
 
-		<StackPanel Orientation="Horizontal">
-			<TextBox Text="{Binding Password}" PasswordChar="{Binding PasswordChar}" Width="200" />
-			<Button Content="👁" Command="{Binding TogglePasswordVisibilityCommand}" />
-		</StackPanel>
+		<!-- Login Panel -->
+		<Border Width="320"
+                Padding="20"
+                Background="White"
+                CornerRadius="12"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="240,180,80,80">
+			<Border.Effect>
+				<DropShadowEffect Color="Black" BlurRadius="20" Opacity="0.2"/>
+			</Border.Effect>
 
-		<Button Content="Login"
-				Command="{Binding LoginCommand}"
-				IsEnabled="{Binding CanLogin}"
-				Margin="0,20,0,0"
-				HorizontalAlignment="Center"
-				Width="100" />
+			<StackPanel Spacing="15">
+				<!-- Email -->
+				<Grid Margin="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<!-- Label column -->
+						<ColumnDefinition Width="*"/>
+						<!-- TextBox column -->
+					</Grid.ColumnDefinitions>
 
-		<TextBlock Text="{Binding ErrorMessage}"
-				   Foreground="Red"
-				   Margin="0,10,0,0"
-				   IsVisible="{Binding ShowError}" />
-	</StackPanel>
+					<TextBlock Text="Email Address :"
+							   FontSize="12"
+							   FontWeight="Bold"
+							   Foreground="#404040"
+							   VerticalAlignment="Center"
+							   Grid.Column="0"
+							   Margin="0,0,10,0"/>
+
+					<TextBox Text="{Binding Username, Mode=TwoWay}"
+							 Width="200"
+							 Height="22"
+							 FontSize="10"
+							 Padding="10"
+							 BorderBrush="#CCC"
+							 Watermark="Please enter email ID"
+							 Margin="5,0,0,0"
+							 Grid.Column="1"/>
+				</Grid>
+
+				<!-- Password -->
+				<Grid Margin="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<!-- Label column -->
+						<ColumnDefinition Width="*"/>
+						<!-- TextBox column -->
+					</Grid.ColumnDefinitions>
+
+					<TextBlock Text="Password :"
+							   FontSize="12"
+							   FontWeight="Bold"
+							   Foreground="#404040"
+							   VerticalAlignment="Center"
+							   Grid.Column="0"
+							   Margin="0,0,10,0"/>
+
+					<Grid Grid.Column="1" HorizontalAlignment="Left">
+						<TextBox Text="{Binding Password, Mode=TwoWay}"
+								 PasswordChar="{Binding PasswordChar}"
+								 Width="200"
+								 Height="22"
+								 FontSize="10"
+								 BorderBrush="#CCC"								
+								 Margin="5,0,0,0"
+								 Watermark="Please enter your password" />
+
+						<Button Command="{Binding TogglePasswordVisibilityCommand}"
+								Width="20"
+								Height="20"
+								HorizontalAlignment="Right"
+								VerticalAlignment="Center"
+								Margin="0,0,5,0"
+								Background="Transparent"
+								Cursor="Hand">
+							<Image Source="avares://PGCTimeTracker/Assets/eye.png"
+								   Width="16"
+								   Height="16"/>
+						</Button>
+					</Grid>
+				</Grid>
+
+				<!-- Login Button -->
+				<Button Classes="login-button"
+						Content="Login"
+                        Width="80"
+                        Height="36"
+                        FontWeight="Bold"
+                        FontSize="14"
+                        HorizontalAlignment="Center"
+                        Background="#2596BE"
+                        Foreground="White"
+                        Command="{Binding LoginCommand}"
+                        IsEnabled="{Binding CanLogin}"
+                        Margin="0,10,0,0"/>
+
+				<!-- Version -->
+				<TextBlock Text="v2.0"
+                           HorizontalAlignment="Center"
+                           Foreground="Gray"
+                           FontSize="10"
+                           Margin="0,7,0,0"/>
+			</StackPanel>
+		</Border>
+	</Grid>
 </Window>
