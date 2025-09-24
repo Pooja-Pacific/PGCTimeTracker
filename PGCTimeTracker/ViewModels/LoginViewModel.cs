@@ -1,15 +1,15 @@
 ﻿using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
-using PGCTimeTracker.Helpers;
-using PGCTimeTracker.Models;
-using PGCTimeTracker.Services;
+using PGCTimeTracker_V2.Helpers;
+using PGCTimeTracker_V2.Models;
+using PGCTimeTracker_V2.Services;
 using ReactiveUI;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using static PGCTimeTracker.Services.IdleDataManager;
+using static PGCTimeTracker_V2.Services.IdleDataManager;
 
-namespace PGCTimeTracker.ViewModels;
+namespace PGCTimeTracker_V2.ViewModels;
 
 public class LoginViewModel : ReactiveObject
 {

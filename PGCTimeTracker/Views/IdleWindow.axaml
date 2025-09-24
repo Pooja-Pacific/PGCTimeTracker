@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="PGCTimeTracker.IdleWindow"
+        x:Class="PGCTimeTracker_V2.IdleWindow"
         Title="IdleWindow"
         Width="800"
         Height="450"
@@ -10,7 +10,7 @@
 
 	<Grid>
 		<!-- Background Image -->
-		<Image Source="avares://PGCTimeTracker/Assets/LOGIN-FORM.png" Stretch="Fill"/>
+		<Image Source="avares://PGCTimeTracker_V2/Assets/LOGIN-FORM.png" Stretch="Fill"/>
 
 		<!-- Foreground Content -->
 		<Border Width="320"

@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="PGCTimeTracker.Views.LoginWindow"
+        x:Class="PGCTimeTracker_V2.Views.LoginWindow"
         Title="LOGIN"
         Width="800"
         Height="450"
@@ -10,7 +10,7 @@
 
 	<Grid>
 		<!-- Background Image -->
-		<Image Source="avares://PGCTimeTracker/Assets/LOGIN-FORM.png" Stretch="Fill"/>
+		<Image Source="avares://PGCTimeTracker_V2/Assets/LOGIN-FORM.png" Stretch="Fill"/>
 
 		<!-- Login Panel -->
 		<Border Width="320"
@@ -88,7 +88,7 @@
 								Margin="0,0,5,0"
 								Background="Transparent"
 								Cursor="Hand">
-							<Image Source="avares://PGCTimeTracker/Assets/eye.png"
+							<Image Source="avares://PGCTimeTracker_V2/Assets/eye.png"
 								   Width="16"
 								   Height="16"/>
 						</Button>

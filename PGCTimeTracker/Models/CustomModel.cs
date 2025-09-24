@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using PGCTimeTracker.Helpers;
+using PGCTimeTracker_V2.Helpers;
 using System.IO;
 using System.Reflection;
 
-namespace PGCTimeTracker.Models
+namespace PGCTimeTracker_V2.Models
 {
     public class ApiResponse
     {

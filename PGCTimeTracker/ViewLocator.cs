@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using PGCTimeTracker.ViewModels;
+using PGCTimeTracker_V2.ViewModels;
 
-namespace PGCTimeTracker
+namespace PGCTimeTracker_V2
 {
     public class ViewLocator : IDataTemplate
     {

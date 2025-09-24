@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PGCTimeTracker.Helpers
+namespace PGCTimeTracker_V2.Helpers
 {
     public static class ResponseStatuses
     {

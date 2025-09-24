@@ -3,8 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
 using Newtonsoft.Json;
-using PGCTimeTracker.Helpers;
-using PGCTimeTracker.Models;
+using PGCTimeTracker_V2.Helpers;
+using PGCTimeTracker_V2.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,7 +13,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PGCTimeTracker.Services
+namespace PGCTimeTracker_V2.Services
 {
     public static class CommonExtension
     {

@@ -1,7 +1,7 @@
 using Avalonia.Controls;
-using PGCTimeTracker.ViewModels;
+using PGCTimeTracker_V2.ViewModels;
 
-namespace PGCTimeTracker.Views
+namespace PGCTimeTracker_V2.Views
 {
     public partial class MainWindow : Window
     {

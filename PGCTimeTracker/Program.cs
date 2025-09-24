@@ -2,7 +2,7 @@
 using System.IO;
 using Avalonia;
 
-namespace PGCTimeTracker
+namespace PGCTimeTracker_V2
 {
     internal sealed class Program
     {
@@ -27,7 +27,7 @@ namespace PGCTimeTracker
         {
             try
             {
-                string lockFilePath = Path.Combine(Path.GetTempPath(), "PGCTimeTracker.lock");
+                string lockFilePath = Path.Combine(Path.GetTempPath(), "PGCTimeTracker_V2.lock");
                 lockFileStream = new FileStream(lockFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
                 return true;
             }

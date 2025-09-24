@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PGCTimeTracker.Services
+namespace PGCTimeTracker_V2.Services
 {
     public class IdleTrackerService
     {

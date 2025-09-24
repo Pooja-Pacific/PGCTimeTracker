@@ -1,4 +1,4 @@
-﻿using PGCTimeTracker.Services;
+﻿using PGCTimeTracker_V2.Services;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PGCTimeTracker.ViewModels
+namespace PGCTimeTracker_V2.ViewModels
 {
     public class IdleViewModel: ReactiveObject
     {

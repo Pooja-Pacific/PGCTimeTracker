@@ -4,10 +4,10 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using PGCTimeTracker.ViewModels;
-using PGCTimeTracker.Views;
+using PGCTimeTracker_V2.ViewModels;
+using PGCTimeTracker_V2.Views;
 
-namespace PGCTimeTracker
+namespace PGCTimeTracker_V2
 {
     public partial class App : Application
     {

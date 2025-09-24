@@ -1,8 +1,8 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Threading;
-using PGCTimeTracker.ViewModels;
+using PGCTimeTracker_V2.ViewModels;
 
-namespace PGCTimeTracker.Views;
+namespace PGCTimeTracker_V2.Views;
 
 public partial class LoginWindow : Window
 {

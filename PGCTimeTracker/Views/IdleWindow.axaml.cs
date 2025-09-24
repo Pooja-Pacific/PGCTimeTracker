@@ -2,11 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using PGCTimeTracker.Services;
-using PGCTimeTracker.ViewModels;
+using PGCTimeTracker_V2.Services;
+using PGCTimeTracker_V2.ViewModels;
 using System;
 
-namespace PGCTimeTracker;
+namespace PGCTimeTracker_V2;
 
 public partial class IdleWindow : Window
 {

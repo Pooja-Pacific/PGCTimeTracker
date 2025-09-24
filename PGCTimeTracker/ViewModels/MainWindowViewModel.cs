@@ -1,4 +1,4 @@
-﻿namespace PGCTimeTracker.ViewModels
+﻿namespace PGCTimeTracker_V2.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {

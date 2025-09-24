@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using PGCTimeTracker.Helpers;
-using PGCTimeTracker.Models;
+using PGCTimeTracker_V2.Helpers;
+using PGCTimeTracker_V2.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +11,7 @@ using System.Text.Json;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 
-namespace PGCTimeTracker.Services
+namespace PGCTimeTracker_V2.Services
 {
     public class IdleDataManager
     {
