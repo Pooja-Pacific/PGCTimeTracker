@@ -96,18 +96,25 @@
 				</Grid>
 
 				<!-- Login Button -->
-				<Button Classes="login-button"
-						Content="Login"
-                        Width="80"
-                        Height="36"
-                        FontWeight="Bold"
-                        FontSize="14"
-                        HorizontalAlignment="Center"
-                        Background="#2596BE"
-                        Foreground="White"
-                        Command="{Binding LoginCommand}"
-                        IsEnabled="{Binding CanLogin}"
-                        Margin="0,10,0,0"/>
+				<Button x:Name="btnLogin"
+							Classes="login-button"
+							Content="Login"
+							Width="176"
+							Height="32"
+							FontFamily="Segoe UI"
+							FontSize="11.25"
+							FontWeight="Bold"
+							Background="#2596BE"
+							Foreground="White"
+							BorderThickness="0"
+							Command="{Binding LoginCommand}"
+							IsEnabled="{Binding CanLogin}"
+							Margin="0,10,0,0"
+							Padding="0"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Top"
+						  HorizontalContentAlignment="Center"
+						  VerticalContentAlignment="Center"/>
 
 				<!-- Version -->
 				<TextBlock Text="v2.0"

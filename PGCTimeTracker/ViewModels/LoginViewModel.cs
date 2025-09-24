@@ -120,7 +120,7 @@ public class LoginViewModel : ReactiveObject
             {
                 if (App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                 {
-                    var idleForm = new IdleWindow(Username);
+                    var idleForm = new IdleWindow(string.Concat(IdleDataManager.configData.FirstName, " ", IdleDataManager.configData.LastName));
                     idleForm.Show();
                     desktop.MainWindow?.Close();
                     desktop.MainWindow = idleForm;

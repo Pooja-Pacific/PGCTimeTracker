@@ -30,11 +30,19 @@ public partial class IdleWindow : Window
             var dlg = new Window
             {
                 Title = "Idle",
-                Content = new TextBlock { Text = "System is idle. Click OK to continue." },
                 Width = 300,
                 Height = 150,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Content = new StackPanel
+                {
+                    Margin = new Thickness(20),
+                    Children =
+                        {
+                            new TextBlock { Text = "System is idle. Click OK to continue." },
+                            new Button { Content = "OK", HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center }
+                        }
+                }
+            };            
             if (this.IsVisible && this.WindowState != WindowState)
             {
                 dlg.ShowDialog(this);
